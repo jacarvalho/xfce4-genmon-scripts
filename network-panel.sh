@@ -3,6 +3,7 @@
 
 # Makes the script more portable
 readonly DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SHIP=$DIR/ship/ship.sh
 
 # Optional icon to display before the text
 # Insert the absolute path of the icon
@@ -10,37 +11,37 @@ readonly DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ICON="${DIR}/icons/network/web.png"
 
 # Displays all active network interfaces with their IPv4 addresses (local)
-readonly TOOLTIP=$(ship --ipv4)
+readonly TOOLTIP=$(bash $SHIP --ipv4)
 
 # You can pass the desired network interface on the command
 # On the generic monitor properties
 # e.g. /path/to/network-panel.sh eth0
 if [ ! -z "${1}" ]; then
-  if ship --all-interfaces | grep -w "${1}" &> /dev/null; then
+  if bash $SHIP --all-interfaces | grep -w "${1}" &> /dev/null; then
     readonly INTERFACE="${1}"
   else
     # Fallback option - Argument is invalid
     # Handle 'no active interfaces at all' case
-    if [[ $(ship --interfaces | awk '{print $1}') = "" ]]; then
+    if [[ $(bash $SHIP --interfaces | awk '{print $1}') = "" ]]; then
       # Fallback option - No argument - No active network interface
       # Assign the second available network interface (first is loopback)
-      readonly INTERFACE=$(ship --all-interfaces | awk '{print $2}')
+      readonly INTERFACE=$(bash $SHIP --all-interfaces | awk '{print $2}')
     else
       # Fallback option - No argument
       # Default value is the first available active network interface
-      readonly INTERFACE=$(ship --interfaces | awk '{print $1}')
+      readonly INTERFACE=$(bash $SHIP --interfaces | awk '{print $1}')
     fi
   fi
 else
   # Handle 'no active interfaces at all' case
-  if [[ $(ship --interfaces | awk '{print $1}') = "" ]]; then
+  if [[ $(bash $SHIP --interfaces | awk '{print $1}') = "" ]]; then
     # Fallback option - No argument - No active network interface
     # Assign the second available network interface (first is loopback)
-    readonly INTERFACE=$(ship --all-interfaces | awk '{print $2}')
+    readonly INTERFACE=$(bash $SHIP --all-interfaces | awk '{print $2}')
   else
     # Fallback option - No argument
     # Default value is the first available active network interface
-    readonly INTERFACE=$(ship --interfaces | awk '{print $1}')
+    readonly INTERFACE=$(bash $SHIP --interfaces | awk '{print $1}')
   fi
 fi
 

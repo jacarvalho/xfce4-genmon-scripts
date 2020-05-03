@@ -33,7 +33,7 @@ fi
     INFO+="<span weight='Bold' fgcolor='#FF5D5D'>"
 
 INFO+="$(awk '{$1 = $1 / 1048576; printf "%.2f", $1}' <<< $(df / | awk '/\/dev/{print $3}'))"
-INFO+="／"
+INFO+="|"
 INFO+="$(awk '{$1 = $1 / 1048576; printf "%.2f", $1}' <<< $(df / | awk '/\/dev/{print $2}'))"
 INFO+=" GB"
 
