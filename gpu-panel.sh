@@ -10,10 +10,10 @@ readonly DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ICON="${DIR}/icons/gpu/gpu-white.png"
 
 # GPU Information
-GPUENABLED=0
+GPUENABLED=false
 GPUINFO="NO GPU"
 if [[ $(nvidia-smi) != *"has failed"* ]]; then
-  GPUENABLED=1
+  GPUENABLED=true
   # Parse GPU info
   GPUINFOARRAY=$(nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits -d MEMORY)
   IFS=', ' read -r -a GPUINFOARRAY <<< "${GPUINFOARRAY}"
@@ -30,13 +30,14 @@ if [[ $(nvidia-smi) != *"has failed"* ]]; then
 fi
 
 
-
 # Tooltip
 MORE_INFO="<tool>"
-GPUNAME=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits)
-MORE_INFO+="┌ ${GPUNAME} \n" # GPU NAME
-GPUTEMP=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits)
-MORE_INFO+="└─ Temperature: +${GPUTEMP}\xE2\x84\x83"
+if [ "${GPUENABLED}" = true ]; then
+  GPUNAME=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits)
+  MORE_INFO+="┌ ${GPUNAME} \n" # GPU NAME
+  GPUTEMP=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits)
+  MORE_INFO+="└─ Temperature: +${GPUTEMP}\xE2\x84\x83"
+fi
 MORE_INFO+="</tool>"
 
 # Panel
