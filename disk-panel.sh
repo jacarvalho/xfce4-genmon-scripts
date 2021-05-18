@@ -33,9 +33,13 @@ fi
     INFO+="<span weight='Bold' fgcolor='#FF5D5D'>"
 
 INFO+="$(awk '{$1 = $1 / 1048576; printf "%.2f", $1}' <<< $(df / | awk '/\/dev/{print $4}'))"
-# INFO+="|"
-# INFO+="$(awk '{$1 = $1 / 1048576; printf "%.2f", $1}' <<< $(df / | awk '/\/dev/{print $2}'))"
 INFO+=" GB"
+
+if [[ "$HOSTNAME" = "kepler"* ]]; then 
+  INFO+=" -- "
+  INFO+="$(awk '{$1 = $1 / 1048576; printf "%.2f", $1}' <<< $(df /media/ssd-2tb | awk '/\/dev/{print $4}'))"
+  INFO+=" GB"
+fi
 
 # Close span tag if warning colors are applied
 [[ "${OVERHEAT}" -eq 1 ]] && \
